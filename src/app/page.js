@@ -16,15 +16,18 @@ async function getAllPosts(page) {
   return response.json();
 }
 
-export default async function Home() {
-  const {data: posts, prev, next} = await getAllPosts(1);
+export default async function Home({ searchParams }) {
+  const currentPage = searchParams?.page || 1;
+  const {data: posts, prev, next} = await getAllPosts(currentPage);
   return (
     <main className={styles.grid}>
       {posts.map((post) => (
         <CardPost key={post.id} post={post} />
       ))}
-      {prev && <Link href={`/?page=${prev}`}>Página Anterior</Link>}
-      {next && <Link href={`/?page=${next}`}>Próxima Página</Link>}
+      <div className={styles.links}>
+        {prev && <Link href={`/?page=${prev}`}>Página Anterior</Link>}
+        {next && <Link href={`/?page=${next}`}>Próxima Página</Link>}
+      </div>
     </main>
   );
 }
